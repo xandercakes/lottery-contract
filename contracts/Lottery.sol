@@ -125,6 +125,10 @@ contract Lottery is LotteryOwnable, Initializable {
     }
 
     // add externalRandomNumber to prevent node validators exploiting
+    //bytes32 _structHash ------ variable
+    //uint256 _randomNumber ------ random number
+    //uint8 _maxNumber = maxNumber ------ max number set by admin
+    //bytes32 _blockhash = blockhash(block.number-1) ----- returns blockhash from previous block 
     function drawing(uint256 _externalRandomNumber) external onlyAdmin {
         require(!drawed(), "reset?");
         require(drawingPhase, "enter drawing phase first");
@@ -138,8 +142,9 @@ contract Lottery is LotteryOwnable, Initializable {
             getTotalRewards(issueIndex);
         }
         uint256 gasleft = gasleft();
-
-        // 1
+        // gasleft is the remaining gas
+        // keccak256 abi.encode computes the hash of structured data (encodes data for external functions)
+        // 1 - first number
         _structHash = keccak256(
             abi.encode(
                 _blockhash,
@@ -382,7 +387,7 @@ contract Lottery is LotteryOwnable, Initializable {
         minPrice = _price;
     }
 
-    // Set the minimum price for one ticket
+    // Set the max lotto ticket number
     function setMaxNumber(uint8 _maxNumber) external onlyAdmin {
         maxNumber = _maxNumber;
     }
