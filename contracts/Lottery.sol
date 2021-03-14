@@ -153,6 +153,8 @@ contract Lottery is LotteryOwnable, Initializable {
                 _externalRandomNumber
             )
         );
+        
+        // randomNumber is calculated as the remainder of (structHash divided by maxNumber) plus 1 - and set to the first winning number.
         _randomNumber  = uint256(_structHash);
         assembly {_randomNumber := add(mod(_randomNumber, _maxNumber),1)}
         winningNumbers[0]=uint8(_randomNumber);
